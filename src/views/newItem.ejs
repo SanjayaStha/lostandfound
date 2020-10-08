@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Item</title>
+    <%- include("base") -%>
+</head>
+
+<body>
+    <nav class="navigation">
+        <a href="feed.html">
+            <img 
+                src="/images/logo.png"
+                alt="logo"
+                title="logo"
+                class="navigation__logo"
+                width="30%"
+            />
+        </a>
+        
+        <div class="navigation__search-container">
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Search">
+        </div>
+        <div class="navigation__icons">
+            <a href="/items" class="navigation__link">
+                <i class="fa fa-compass fa-lg"></i>
+            </a>
+            <a href="/newItem" class="navigation__link">
+                <i class="fa fa-plus fa-lg"></i>
+            </a>
+            <a href="/profile" class="navigation__link">
+                <i class="fa fa-user-o fa-lg"></i>
+            </a>
+
+            <a href="/logout" class="navigation__link" type="submit" onclick="signOut()">
+                    <i class="fa fa-power-off fa-lg"></i>
+            </a>
+
+        </div>
+        
+
+    </nav>
+
+ 
+        <div class="container container-fluid bg-light">
+            <h1 class="ml-auto mr-auto bg-light p-5"> Add Item</h1>
+            <form action="/newItem" method="POST">
+                
+                <div class="row p-3">
+                    <div class="form-check-inline col">
+                        <label class="form-check-label" for="exampleRadios1">
+                            Lost Item
+                          </label>
+                        <input class="form-check-input m-4" type="radio" name="item_type" id="lost_item" value="lost" checked>
+                       
+                      </div>
+                      <div class="form-check-inline col m-3">
+                        <label class="form-check-label" for="found_item">
+                            Found Item
+                          </label>
+                        <input class="form-check-input m-4" type="radio" name="item_type" id="found_item" value="found">
+                        
+                      </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <label for="item_name">Item Name</label>
+                    <input type="text" name="item_name" class="form-control form-control-lg">
+                </div>
+                <div class="form-group">
+                    <label for="item_desc">Descriptions</label>
+                    <textarea type="text" class="form-control form-control-lg" name="item_desc" row="10" col="10">
+                    </textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item Image">Upload Image</label>
+                    <input type="file" class="form-control-file form-control-lg" name="item_image" id="images" accept=" image/*" onchange="uploadImages()" multiple>
+
+                </div>
+
+                <div id="uploadImages" class="p-3">
+
+                </div>
+                <input class="btn btn-success btn-lg" type="submit" value="Submit">
+                
+            </form>
+        </div>
+    </div>
+    <script>
+        function uploadImages() {
+            console.log("-------------------")
+            let files = File[""]
+            files = document.querySelector("#images").files
+            let i = 0
+            for (file of files) {
+                i = i + 1;
+                let name = new Date() + "-" + file.name;
+                let metadata = {
+                    contentType: file.type
+                }
+                var spaceRef = imagesRef.child(name);
+
+                let task = spaceRef.put(file, metadata)
+                task.then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(url => {
+                        console.log(url)
+                        var tag = document.getElementById("uploadImages")
+                        tag.innerHTML = tag.innerHTML + `<img src=${url} width="120px"/>` + `<input type="hidden" name="uploadImages" value=${url} />`
+                    })
+
+            }
+        }
+    </script>
+    <script src="/js/firebaseAuth.js "></script>
+    <script src="/js/firebaseTodo.js "></script>
+</body>
+
+</html>
