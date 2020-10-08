@@ -1,3 +1,4 @@
+const cool = require('cool-ascii-faces');
 var express = require('express');
 var logger = require('morgan')
 const cookieParser = require("cookie-parser");
@@ -19,7 +20,6 @@ const db = admin.firestore();
 const csrfMiddleware = csrf({ cookie: true });
 
 var app = express()
-
 app.use(session({ secret: 'KV0AnuKISrUtZE2DqJYYBycjsUq2',resave: true,
 saveUninitialized: true }));
 app.use(bodyParser.json());
@@ -40,6 +40,8 @@ function isAuthenticated(req, res, next) {
 
     return res.redirect("/")
 }
+
+app.get('/cool', (req, res) => res.send(cool()))
 
 app.all("*", (req, res, next) => {
     res.cookie("XSRF-TOKEN", req.csrfToken());
