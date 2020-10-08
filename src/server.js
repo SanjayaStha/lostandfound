@@ -8,6 +8,8 @@ var admin = require('firebase-admin')
 const session = require('express-session');
 const path = require('path');
 
+const nodemailer = require('nodemailer');
+
 var PORT = process.env.PORT || 8888;
 
 var serviceAccount = require('../service.json')
@@ -42,6 +44,7 @@ function isAuthenticated(req, res, next) {
 }
 
 app.get('/cool', (req, res) => res.send(cool()))
+app.get('/times', (req, res) => res.send(showTimes()))
 
 app.all("*", (req, res, next) => {
     res.cookie("XSRF-TOKEN", req.csrfToken());
@@ -90,6 +93,44 @@ app.get('/profile', (req, res) => {
 
 app.get('/newItem', async (req, res) => {
     res.render('newItem.ejs', { csrfToken: req.csrfToken() })
+})
+
+
+app.post("/sendMail",(req,res)=>{
+    const email = req.body.email.toString();
+    console.log("initiating mailing service")
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+
+        auth: {
+            user: 'ssanjayaiw@gmail.com',
+            pass: "ssanjaya097@Iw"
+        }
+    });
+    console.log(transporter)
+    console.log("suthorizing mail")
+
+    var mailoptions = {
+        from: "ssanjaya097@gmail.com",
+        to: email,
+        subject: "Thank You for signing up",
+        html: `<h1>Hello ${email}</h1> 
+        
+        <img src="https://firebasestorage.googleapis.com/v0/b/worklist-a9d4f.appspot.com/o/logo.png?alt=media&token=201fae47-e1c5-4f3d-bd11-08c3bc2d6963" width="200px" >
+        
+        `
+    }
+
+    console.log("sending mail...")
+
+
+    transporter.sendMail(mailoptions, function(error, info){
+        if(error){
+            console.log(error)
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    })
 })
 
 
@@ -272,6 +313,14 @@ app.get("/like/:id",isAuthenticated, async (req,res)=>{
     }
 })
 
+showTimes = () => {
+    let result = '';
+    const times = process.env.TIMES || 5;
+    for (i = 0; i < times; i++) {
+      result += i + ' ';
+    }
+    return result;
+  }
 
 app.listen(PORT, function() {
     console.log(`App running on port ${PORT}`)

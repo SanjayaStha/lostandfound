@@ -10,6 +10,19 @@ function signInWithGoogle() {
     var googleAuthProvider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(googleAuthProvider)
         .then((data) => {
+            console.log(data.additionalUserInfo.isNewUser)
+            let email = data.user.email
+            
+            fetch("/sendMail", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                },
+
+                body: JSON.stringify({ email }),
+            })
             if (data.additionalUserInfo.isNewUser) {
                 userRef = {
                     'name': data.user.displayName,
@@ -19,6 +32,7 @@ function signInWithGoogle() {
                 }
                 const docRef = db.collection('users').doc(data.user.uid)
                 docRef.set(userRef)
+                
             }
 
             const user = data.user
@@ -30,7 +44,8 @@ function signInWithGoogle() {
                         "Content-Type": "application/json",
                         "CSRF-Token": Cookies.get("XSRF-TOKEN"),
                     },
-                    body: JSON.stringify({ idToken }),
+
+                    body: JSON.stringify({ idToken, email }),
                 });
             });
 
