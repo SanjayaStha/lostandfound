@@ -97,7 +97,10 @@ app.get('/newItem', async (req, res) => {
 
 
 app.post("/sendMail",(req,res)=>{
-    const email = req.body.email.toString();
+    console.log(req.body)
+    const email = req.body.userRef.email.toString();
+    const name = req.body.userRef.name.toString();
+    const photoURL = req.body.userRef.photoURL.toString();
     console.log("initiating mailing service")
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -108,16 +111,86 @@ app.post("/sendMail",(req,res)=>{
         }
     });
     console.log(transporter)
-    console.log("suthorizing mail")
+    console.log("authorizing mail")
 
     var mailoptions = {
         from: "ssanjaya097@gmail.com",
         to: email,
-        subject: "Thank You for signing up",
-        html: `<h1>Hello ${email}</h1> 
+        subject: "Lost and Found Sign Up",
+        html: `
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!------ Include the above in your HEAD tag ---------->
         
-        <img src="https://firebasestorage.googleapis.com/v0/b/worklist-a9d4f.appspot.com/o/logo.png?alt=media&token=201fae47-e1c5-4f3d-bd11-08c3bc2d6963" width="200px" >
-        
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!------ Include the above in your HEAD tag ---------->
+       
+        <div style="font-family: Helvetica Neue, Helvetica, Helvetica, Arial, sans-serif;">
+            <table style="width: 100%; padding:10px; margin:10px">
+              <tr>
+                <td></td>
+                <td bgcolor="#eee">
+                  <div style="padding: 15px; max-width: 600px;margin: 0 auto;display: block; border-radius: 0px;padding: 0px; border: 3px solid white;">
+                    <table style="width: 100%;background: #FFFFFF">
+                      <tr>
+                        <td></td> 
+                        <td>
+                          <div>
+                            <table width="100%">
+                              <tr>
+                                <td rowspan="2" style="text-align:center;padding:10px;">
+                                    
+                                    <span style="color:white;font-size: 13px;font-style: italic;margin-top: 20px; padding:10px; font-size: 14px; font-weight:normal;margin-left: auto; margin-right: auto;">
+                                    <img src="https://firebasestorage.googleapis.com/v0/b/worklist-a9d4f.appspot.com/o/logo.png?alt=media&token=201fae47-e1c5-4f3d-bd11-08c3bc2d6963" width="300px" />
+                                    <span></span></span></td>
+                              </tr>
+                            </table>
+                          </div>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </table>
+                    <table style="padding: 10px;font-size:14px; width:100%;">
+                      <tr>
+                        <td style="padding:10px;font-size:14px; width:100%;">
+                            <p>Hello ${name},</p>
+                            <p><br /> Thank You for signing Up for <b>Lost and Found</b>. </p>
+                             <p> Please be active and suggest your friends and family member to keep the community growing </p>
+                            <p style="color:black"> <b>Thank you regard <br>
+                Lost and Found pvt. ltd.<br>
+                Kathmandu, Nepal </b></p>
+                                      <!-- /Callout Panel -->
+                          <!-- FOOTER -->
+                         </td>
+                      </tr>
+                      <tr style="background-color:#fff" align="center" > 
+                      <td style="background-color:#fff">
+                         <div align="center" style="font-size:12px; margin-top:20px; padding:5px; width:100%; color:red;">
+                            <b>@2020 LostAndFound</b>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr style="background-color:#fff">
+                    <center style="margin-left: auto; margin-right: auto; background-color:#fff">
+                        <a href="#">
+                        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmaxcdn.icons8.com%2FShare%2Ficon%2Fdotty%2FLogos%2Ffacebook1600.png" width="48px" />
+                        </a>
+                        <a href="#">
+                        <img  src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsguru.org%2Fwp-content%2Fuploads%2F2018%2F02%2Ftwitter-logo_318-40459.jpg" width="48px />
+                        </a>
+                        <a href="#" >
+                        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmaxcdn.icons8.com%2FShare%2Ficon%2Fp1em%2FLogos%2Finstagram_new1600.png" width="48px" />
+                        </a>
+                        </center>
+                      </tr>
+                    </table>
+                  </div>
         `
     }
 
