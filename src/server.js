@@ -103,15 +103,15 @@ app.post("/sendMail",(req,res)=>{
     const photoURL = req.body.userRef.photoURL.toString();
     console.log("initiating mailing service")
     var transporter = nodemailer.createTransport({
-        service: 'gmail',
-
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
         auth: {
             user: 'ssanjayaiw@gmail.com',
             pass: "ssanjaya097@Iw"
         }
     });
-    console.log(transporter)
-    console.log("authorizing mail")
+    
 
     var mailoptions = {
         from: "ssanjaya097@gmail.com",
@@ -204,6 +204,8 @@ app.post("/sendMail",(req,res)=>{
             console.log("Email sent: " + info.response);
         }
     })
+
+    return res.send("success")
 })
 
 
